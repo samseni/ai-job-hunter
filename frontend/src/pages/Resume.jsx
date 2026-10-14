@@ -1,16 +1,36 @@
 import { useState } from "react";
+import client from "../api/client";
 
 export default function Resume() {
   const [file, setFile] = useState(null);
+  const [text, setText] = useState("");
+  const [msg, setMsg] = useState("");
+
+  const upload = async () => {
+    if (!file) return;
+    setMsg("Uploading…");
+    const form = new FormData();
+    form.append("resume", file);
+    try {
+      const r = await client.post("/resume/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
+      setText(r.data.text || "");
+      localStorage.setItem("resumeText", r.data.text || "");
+      setMsg(`Extracted ${r.data.pages || 1} page(s). Saved for AI match.`);
+    } catch (e) {
+      setMsg(e.response?.data?.error || "Backend not running. Start it: node backend/src/index.js");
+    }
+  };
+
   return (
     <div>
       <h1>Resume</h1>
-      <div className="card">
+      <p className="muted">Upload a PDF — text is extracted by the backend and reused for AI match.</p>
+      <div className="card filters">
         <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0] || null)} />
-        {file && <p className="muted">{file.name} — {(file.size / 1024).toFixed(1)} KB</p>}
-        <p className="muted">PDF text extraction connects to the backend in Stage 5.</p>
+        <button className="btn" onClick={upload} disabled={!file}>Extract text</button>
       </div>
-      <div className="card"><h3>Extracted text</h3><p className="muted">Upload a resume to preview it here (backend coming soon).</p></div>
+      {msg && <p className="muted">{msg}</p>}
+      <div className="card"><h3>Extracted text</h3><p style={{ whiteSpace: "pre-wrap" }}>{text || <span className="muted">Nothing extracted yet.</span>}</p></div>
     </div>
   );
 }
