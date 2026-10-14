@@ -39,8 +39,8 @@ body { margin: 0; font-family: "Inter", system-ui, -apple-system, sans-serif; ba
 
 /* Forms */
 .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.filters input, .filters select, .row input, .row select { padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; background: #f8fafc; outline: none; transition: 0.15s; }
-.filters input:focus, .filters select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+.filters input, .filters select, .row input, .row select, textarea { padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; background: #f8fafc; outline: none; transition: 0.15s; font-family: inherit; }
+.filters input:focus, .filters select:focus, textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
 .filters label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
 
 /* Buttons */
