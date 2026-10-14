@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
-const pdf = require("pdf-parse");
+const { PDFParse } = require("pdf-parse");
 
 // In-memory upload, 5MB limit, PDFs only.
 const upload = multer({
@@ -13,8 +13,9 @@ const upload = multer({
 router.post("/upload", upload.single("resume"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "Upload a PDF file as 'resume'." });
   try {
-    const data = await pdf(req.file.buffer);
-    res.json({ text: data.text.slice(0, 20000), pages: data.numpages });
+    const parser = new PDFParse({ data: req.file.buffer });
+    const result = await parser.getText();
+    res.json({ text: result.text.slice(0, 20000), pages: result.pages });
   } catch (e) {
     res.status(500).json({ error: "Could not parse PDF." });
   }
