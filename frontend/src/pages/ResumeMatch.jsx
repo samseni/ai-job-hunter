@@ -8,6 +8,10 @@ export default function ResumeMatch() {
   const [msg, setMsg] = useState("");
 
   const analyze = async () => {
+    if (!resumeText.trim() || !jobDescription.trim()) {
+      setMsg("Paste both your resume and the job description first.");
+      return;
+    }
     setMsg("Analyzing…"); setResult(null);
     try {
       const r = await client.post("/ai/match", { resumeText, jobDescription });
