@@ -1,171 +1,98 @@
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { 
-  Search, 
-  Bell, 
-  ChevronDown, 
-  LogOut, 
-  User, 
-  Settings, 
-  Sparkles,
-  X,
-  Moon,
-  Sun
-} from 'lucide-react'
+import { Bell, Search, ChevronDown, LogOut, User, Settings, Sparkles } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { getInitials } from '../../utils/helpers'
 
-const mockNotifications = [
-  { id: 1, title: 'New job match found', description: 'Senior Frontend Developer at TechCorp - 87% match', time: '2 hours ago', read: false, type: 'match' },
-  { id: 2, title: 'Application submitted', description: 'Your application to StartupXYZ has been submitted', time: '5 hours ago', read: false, type: 'success' },
-  { id: 3, title: 'Interview scheduled', description: 'Technical interview with TechCorp on Dec 15 at 2 PM', time: '1 day ago', read: true, type: 'interview' },
-  { id: 4, title: 'Auto-apply paused', description: 'Daily application limit reached', time: '2 days ago', read: true, type: 'warning' },
+const notifications = [
+  { id: 1, title: 'New matching jobs', description: '7 jobs meet your 80% auto-apply threshold', time: '10m ago', read: false },
+  { id: 2, title: 'Application submitted', description: 'Senior Frontend Developer at TechCorp landed in submission queue', time: '1h ago', read: false },
+  { id: 3, title: 'Interview reminder', description: 'System design interview tomorrow at 2 PM', time: '4h ago', read: true },
+  { id: 4, title: 'Auto-apply paused', description: 'Week/detail cap reached, review before re-enabling', time: '1d ago', read: true },
 ]
 
 export default function Header() {
-  const [searchQuery, setSearchQuery] = useState('')
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [darkMode, setDarkMode] = useState(false)
-  const notificationsRef = useRef(null)
+  const notificationRef = useRef(null)
   const profileRef = useRef(null)
-  const searchRef = useRef(null)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const unread = notifications.filter((item) => !item.read).length
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
-        setNotificationsOpen(false)
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setProfileOpen(false)
-      }
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchQuery('')
-      }
+    const close = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) setNotificationsOpen(false)
+      if (profileRef.current && !profileRef.current.contains(event.target)) setProfileOpen(false)
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
   }, [])
 
-  const unreadCount = mockNotifications.filter(n => !n.read).length
-
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
-
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-full mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16 lg:h-14 lg:ml-72">
-          <div className="flex-1 lg:flex-none max-w-md mx-4 lg:mx-0">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} aria-hidden="true" />
-              <input
-                ref={searchRef}
-                type="search"
-                placeholder="Search jobs, companies, skills..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all"
-                aria-label="Search"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 lg:gap-3">
-            <div className="relative" ref={notificationsRef}>
-              <button
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
-              >
-                <Bell size={22} aria-hidden="true" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-96 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden">
-                  <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+      <div className="flex h-16 items-center justify-between px-4 lg:px-8">
+        <div className="relative hidden max-w-lg flex-1 lg:block">
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input className="input pl-10 py-2" placeholder="Search jobs, companies, skills..." aria-label="Search" />
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="relative" ref={notificationRef}>
+            <button
+              onClick={() => setNotificationsOpen((value) => !value)}
+              className="relative rounded-xl p-2.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              aria-expanded={notificationsOpen}
+              aria-label={`Notifications, ${unread} unread`}
+            >
+              <Bell size={20} />
+              {unread > 0 && <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">{unread}</span>}
+            </button>
+            {notificationsOpen && (
+              <div className="absolute right-0 mt-3 w-[23rem] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10">
+                <div className="flex items-center justify-between border-b border-slate-100 p-4">
+                  <div>
                     <h3 className="font-semibold text-slate-900">Notifications</h3>
-                    {unreadCount > 0 && (
-                      <button className="text-sm text-indigo-600 hover:text-indigo-700">Mark all read</button>
-                    )}
+                    <p className="text-sm text-slate-500">{unread} unread updates</p>
                   </div>
-                  <div className="max-h-96 overflow-y-auto">
-                    {mockNotifications.map((notification) => (
-                      <button
-                        key={notification.id}
-                        className={`w-full p-4 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-0 ${!notification.read ? 'bg-slate-50' : ''}`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${notification.type === 'match' ? 'bg-indigo-100 text-indigo-600' : notification.type === 'success' ? 'bg-emerald-100 text-emerald-600' : notification.type === 'interview' ? 'bg-violet-100 text-violet-600' : 'bg-amber-100 text-amber-600'}`}>
-                            <Sparkles size={18} aria-hidden="true" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900">{notification.title}</p>
-                            <p className="text-sm text-slate-500 mt-0.5">{notification.description}</p>
-                            <p className="text-xs text-slate-400 mt-1">{notification.time}</p>
-                          </div>
-                          {!notification.read && (
-                            <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0" />
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="p-3 border-t border-slate-200">
-                    <Link to="/settings" className="block text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                      View all notifications
-                    </Link>
-                  </div>
+                  <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700">Mark all read</button>
                 </div>
-              )}
-            </div>
-
-            <div className="relative" ref={profileRef}>
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-3 p-1.5 pr-3 rounded-xl hover:bg-slate-100 transition-colors"
-                aria-label="Profile menu"
-              >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-semibold">
-                  {getInitials(user?.name)}
+                <div className="max-h-96 overflow-y-auto">
+                  {notifications.map((item) => (
+                    <button key={item.id} className={`flex w-full items-start gap-3 border-b border-slate-100 p-4 text-left transition hover:bg-slate-50 ${item.read ? '' : 'bg-indigo-50/50'}`}>
+                      <span className={`mt-1 h-2.5 w-2.5 rounded-full ${item.read ? 'bg-slate-300' : 'bg-indigo-500'}`} />
+                      <div className="min-w-0">
+                        <p className="font-medium text-slate-900">{item.title}</p>
+                        <p className="mt-1 text-sm text-slate-500">{item.description}</p>
+                        <p className="mt-1 text-xs text-slate-400">{item.time}</p>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-slate-900 truncate max-w-[150px]">{user?.name}</p>
-                  <p className="text-xs text-slate-500 truncate max-w-[150px]">{user?.targetRole || 'Job Seeker'}</p>
+                <div className="p-3">
+                  <Link to="/settings" className="block rounded-xl py-2 text-center text-sm font-medium text-indigo-600 hover:bg-indigo-50">View all activity</Link>
                 </div>
-                <ChevronDown size={16} className="text-slate-400 hidden md:block" aria-hidden="true" />
-              </button>
-
-              {profileOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden py-2">
-                  <Link to="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 transition-colors">
-                    <User size={18} aria-hidden="true" />
-                    <span className="font-medium">Profile</span>
-                  </Link>
-                  <Link to="/settings" className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-50 transition-colors">
-                    <Settings size={18} aria-hidden="true" />
-                    <span className="font-medium">Settings</span>
-                  </Link>
-                  <div className="border-t border-slate-200 my-2" />
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    <LogOut size={18} aria-hidden="true" />
-                    <span className="font-medium">Sign out</span>
-                  </button>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
+          <div className="relative" ref={profileRef}>
+            <button onClick={() => setProfileOpen((value) => !value)} className="flex items-center gap-3 rounded-2xl p-1.5 pr-3 transition-colors hover:bg-slate-100">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 font-semibold text-white">
+                {getInitials(user?.name)}
+              </div>
+              <div className="hidden text-left sm:block">
+                <p className="max-w-[150px] truncate text-sm font-medium text-slate-900">{user?.name || 'Job Seeker'}</p>
+                <p className="max-w-[150px] truncate text-xs text-slate-500">{user?.targetRole || 'Manage account'}</p>
+              </div>
+              <ChevronDown size={16} className="hidden text-slate-400 sm:block" />
+            </button>
+            {profileOpen && (
+              <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-3xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-900/10">
+                <Link to="/settings" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-slate-50"><User size={18} /><span className="font-medium">Profile</span></Link>
+                <Link to="/settings" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-700 transition hover:bg-slate-50"><Settings size={18} /><span className="font-medium">Settings</span></Link>
+                <div className="my-2 border-t border-slate-100" />
+                <button onClick={async () => { await logout(); navigate('/login') }} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-red-600 transition hover:bg-red-50"><LogOut size={18} /><span className="font-medium">Sign out</span></button>
+              </div>
+            )}
           </div>
         </div>
       </div>

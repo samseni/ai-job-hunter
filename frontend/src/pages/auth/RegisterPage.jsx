@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { UserPlus, Lock, Mail } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import { Input, Button } from '../../components/common'
+import { Input, Button, Card } from '../../components/common'
 
 export default function RegisterPage() {
   const { register } = useAuth()
@@ -27,18 +28,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-semibold text-slate-900">Create account</h2>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <Input required label="Name" value={name} onChange={(e) => setName(e.target.value)} />
-      <Input required type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input required type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button fullWidth loading={loading} type="submit">
-        Register
-      </Button>
-      <p className="text-sm">
-        Already have an account? <Link to="/login" className="text-indigo-600">Sign in</Link>
+    <Card padding="p-7" className="shadow-xl shadow-indigo-100/40">
+      <div className="mb-6 text-center">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white">
+          <UserPlus size={24} />
+        </div>
+        <h2 className="mt-4 text-3xl font-bold text-slate-950">Create account</h2>
+        <p className="mt-2 text-slate-500">Join your AI-powered career workspace.</p>
+      </div>
+      {error && <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <Input required label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input required type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input required type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button fullWidth loading={loading} type="submit" size="lg">Register</Button>
+      </form>
+      <p className="mt-6 text-center text-sm text-slate-600">
+        Already have an account? <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-700">Sign in</Link>
       </p>
-    </form>
+    </Card>
   )
 }
