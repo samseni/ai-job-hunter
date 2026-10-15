@@ -1,23 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --bg: #eef2ff;
-    --card: #ffffff;
-    --text: #020617;
-    --muted: #475569;
-    --border: #dbe4ff;
-    --primary: #4f46e5;
-    --primary-dark: #3730a3;
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e7ef;
+    --primary: #6366f1;
     --accent: #7c3aed;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --radius: 12px;
-    --shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
+    --radius: 1rem;
+    --shadow-soft: 0 18px 44px rgba(15, 23, 42, 0.07);
+    --shadow-deep: 0 30px 70px rgba(15, 23, 42, 0.12);
+  }
+
+  html, body, #root {
+    min-height: 100dvh;
+    height: 100%;
+    margin: 0;
   }
 
   * {
@@ -26,120 +33,114 @@
 
   body {
     margin: 0;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
     background:
-      radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 32rem),
+      radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 30rem),
       linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
     background-attachment: fixed;
-    color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  html {
-    scroll-behavior: smooth;
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--text);
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 focus:ring-offset-2 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/15 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 focus:ring-indigo-500;
+    @apply bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-indigo-500/25;
   }
 
   .btn-secondary {
-    @apply bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-400;
+    @apply border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-400;
+    @apply bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900;
   }
 
   .btn-danger {
-    @apply bg-red-600 text-white shadow-lg shadow-red-500/30 hover:bg-red-700 hover:shadow-xl focus:ring-red-500;
+    @apply bg-red-600 text-white shadow-lg shadow-red-500/20 hover:bg-red-700 hover:-translate-y-0.5;
   }
 
   .btn-outline {
-    @apply bg-transparent border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-400;
+    @apply border-2 border-slate-200 bg-transparent text-slate-700 hover:border-slate-300 hover:bg-slate-50;
+  }
+
+  .btn-success {
+    @apply bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 hover:-translate-y-0.5;
   }
 
   .card {
-    @apply overflow-hidden rounded-[1.35rem] border border-slate-200/80 bg-white shadow-[var(--shadow)] backdrop-blur-xl transition-all duration-300;
+    @apply min-w-0 overflow-hidden rounded-[1.35rem] border border-slate-200/80 bg-white shadow-[var(--shadow-soft)] transition-all duration-300;
   }
 
   .card-hover {
-    @apply hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-indigo-100;
+    @apply hover:-translate-y-1 hover:border-indigo-200 hover:shadow-[var(--shadow-deep)];
   }
 
   .input {
-    @apply w-full rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-slate-900 placeholder-slate-400 shadow-sm transition-all duration-200 hover:border-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500;
+    @apply min-h-11 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm transition-all duration-200 hover:border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/15;
   }
 
   .input-error {
-    @apply border-red-300 focus:border-red-500 focus:ring-red-500/20;
+    @apply border-red-300 focus:border-red-500 focus:ring-red-500/15;
   }
 
   .label {
-    @apply block text-sm font-medium text-slate-700 mb-2;
+    @apply mb-2 block text-sm font-semibold text-slate-700;
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
 
-  .badge-primary {
-    @apply bg-indigo-100 text-indigo-700;
-  }
-
-  .badge-success {
-    @apply bg-emerald-100 text-emerald-700;
-  }
-
-  .badge-warning {
-    @apply bg-amber-100 text-amber-700;
-  }
-
-  .badge-danger {
-    @apply bg-red-100 text-red-700;
-  }
-
-  .badge-slate {
-    @apply bg-slate-100 text-slate-700;
-  }
+  .badge-primary { @apply bg-indigo-50 text-indigo-700; }
+  .badge-success { @apply bg-emerald-50 text-emerald-700; }
+  .badge-warning { @apply bg-amber-50 text-amber-700; }
+  .badge-danger { @apply bg-red-50 text-red-700; }
+  .badge-slate { @apply bg-slate-100 text-slate-700; }
+  .badge-info { @apply bg-sky-50 text-sky-700; }
+  .badge-violet { @apply bg-violet-50 text-violet-700; }
 
   .sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 font-medium transition-all duration-200 hover:bg-white/10 hover:text-white;
+    @apply flex min-w-0 items-center gap-3 rounded-xl px-4 py-3 font-medium text-slate-300 transition-all duration-200 hover:bg-white/10 hover:text-white hover:translate-x-0.5;
   }
 
   .sidebar-link-active {
-    @apply bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/40;
-  }
-
-  .stat-card {
-    @apply card p-6 flex items-center gap-4 border-t-4;
+    @apply bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30;
   }
 
   .page-header {
-    @apply mb-8;
+    @apply mb-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between;
   }
 
   .page-title {
-    @apply text-3xl font-bold text-slate-900 tracking-tight;
+    @apply text-3xl font-bold tracking-tight text-slate-950;
   }
 
   .page-subtitle {
-    @apply text-slate-500 mt-1;
+    @apply max-w-3xl text-sm leading-6 text-slate-500;
   }
 
   .section-title {
-    @apply text-lg font-semibold text-slate-900;
+    @apply text-lg font-semibold text-slate-950;
   }
 
   .empty-state {
-    @apply text-center py-12 px-6;
+    @apply mx-auto max-w-md rounded-3xl border border-dashed border-slate-200 bg-slate-50/80 p-8 text-center;
   }
 
   .empty-state-icon {
@@ -147,11 +148,23 @@
   }
 
   .empty-state-title {
-    @apply text-lg font-semibold text-slate-900 mb-1;
+    @apply text-lg font-semibold text-slate-900;
   }
 
   .empty-state-description {
-    @apply text-slate-500;
+    @apply mt-1 text-sm text-slate-500;
+  }
+
+  .subtle-surface {
+    @apply rounded-2xl border border-slate-200/70 bg-slate-50/80;
+  }
+
+  .progress-track {
+    @apply h-2.5 overflow-hidden rounded-full bg-slate-100;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-all duration-500;
   }
 }
 
