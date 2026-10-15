@@ -9,7 +9,6 @@ import { Input } from '../../components/common'
 export default function AutoApplyPage() {
   const [enabled, setEnabled] = useState(false)
   const [stopped, setStopped] = useState(false)
-  const [mode, setMode] = useState('manual')
   const [settings, setSettings] = useState({ minimumMatch: 80, dailyLimit: 5, weeklyLimit: 20, resumeVersion: 'Senior React', approvalMode: 'manual' })
 
   const activity = [
@@ -39,7 +38,7 @@ export default function AutoApplyPage() {
         <Card padding="p-5">
           <p className="text-sm text-slate-500">Current status</p>
           <p className="mt-2 text-2xl font-bold text-slate-950">{stopped ? 'Stopped' : enabled ? 'Active' : 'Paused'}</p>
-          <Badge className="mt-3" variant={stopped ? 'danger' : enabled ? 'success' : 'warning'}>{mode} approval mode</Badge>
+          <Badge className="mt-3" variant={stopped ? 'danger' : enabled ? 'success' : 'warning'}>{settings.approvalMode} approval mode</Badge>
         </Card>
         <Card padding="p-5">
           <p className="text-sm text-slate-500">Limits</p>

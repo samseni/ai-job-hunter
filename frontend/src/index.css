@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    --bg: #f8fafc;
+    --bg: #eef2ff;
     --card: #ffffff;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
+    --text: #020617;
+    --muted: #475569;
+    --border: #dbe4ff;
     --primary: #4f46e5;
-    --primary-dark: #4338ca;
+    --primary-dark: #3730a3;
     --accent: #7c3aed;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
     --radius: 12px;
-    --shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.1);
+    --shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
   }
 
   * {
@@ -27,7 +27,10 @@
   body {
     margin: 0;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
+    background:
+      radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 32rem),
+      linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    background-attachment: fixed;
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,11 +43,11 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 focus:ring-offset-2 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30 hover:from-indigo-700 hover:to-violet-700 hover:shadow-xl hover:shadow-indigo-500/40 focus:ring-indigo-500;
+    @apply bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 focus:ring-indigo-500;
   }
 
   .btn-secondary {
@@ -64,15 +67,15 @@
   }
 
   .card {
-    @apply bg-white border border-slate-200 rounded-2xl shadow-[var(--shadow)] transition-all duration-200;
+    @apply overflow-hidden rounded-[1.35rem] border border-slate-200/80 bg-white shadow-[var(--shadow)] backdrop-blur-xl transition-all duration-300;
   }
 
   .card-hover {
-    @apply hover:shadow-[var(--shadow-lg)] hover:-translate-y-1;
+    @apply hover:-translate-y-1 hover:shadow-[var(--shadow-lg)] hover:border-indigo-100;
   }
 
   .input {
-    @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white;
+    @apply w-full rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-slate-900 placeholder-slate-400 shadow-sm transition-all duration-200 hover:border-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500;
   }
 
   .input-error {

@@ -57,12 +57,15 @@ export default function Sidebar() {
 
       <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-72 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out lg:transform-none ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
         <div className="flex flex-col h-full">
-          <div className="p-6 border-b border-slate-800">
-            <NavLink to="/dashboard" className="flex items-center gap-3" aria-label="AI Career Companion">
+          <div className="flex items-center gap-4 border-b border-white/10 px-6 py-5">
+            <NavLink to="/dashboard" className="flex items-center gap-4" aria-label="AI Career Companion">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                 <Sparkles size={22} className="text-white" />
               </div>
-              <span className="text-xl font-bold tracking-tight">AI Career Companion</span>
+              <div>
+                <span className="block text-lg font-bold leading-tight tracking-tight">AI Career Companion</span>
+                <span className="text-xs text-slate-300">Career workspace</span>
+              </div>
             </NavLink>
           </div>
 
