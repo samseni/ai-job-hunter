@@ -4,6 +4,12 @@ class MockApiClient {
   constructor() {
     this.token = localStorage.getItem('mock_token')
     this.user = JSON.parse(localStorage.getItem('mock_user') || 'null')
+    const storedUsers = localStorage.getItem('mock_users')
+    this.users = storedUsers ? JSON.parse(storedUsers) : null
+    if (!Array.isArray(this.users)) {
+      this.users = [{ ...mockUser, password: 'password' }]
+      localStorage.setItem('mock_users', JSON.stringify(this.users))
+    }
   }
 
   setAuth(token, user) {
@@ -11,6 +17,10 @@ class MockApiClient {
     this.user = user
     localStorage.setItem('mock_token', token)
     localStorage.setItem('mock_user', JSON.stringify(user))
+  }
+
+  saveUsers() {
+    localStorage.setItem('mock_users', JSON.stringify(this.users))
   }
 
   clearAuth() {
@@ -30,17 +40,22 @@ class MockApiClient {
     // Auth endpoints
     if (url === '/auth/login' && method === 'POST') {
       const { email, password } = data
-      if (email === 'demo@example.com' && password === 'password') {
-        this.setAuth('mock-jwt-token', mockUser)
-        return { data: { user: mockUser, token: 'mock-jwt-token' } }
-      }
-      throw { response: { status: 401, data: { message: 'Invalid credentials' } } }
+      const matched = this.users.find((account) => account.email === email && account.password === password)
+      if (!matched) throw { response: { status: 401, data: { message: 'Invalid credentials' } } }
+      const user = { ...matched }
+      delete user.password
+      this.setAuth('mock-jwt-token', user)
+      return { data: { user, token: 'mock-jwt-token' } }
     }
 
     if (url === '/auth/register' && method === 'POST') {
       const newUser = { ...mockUser, ...data, id: Date.now() }
-      this.setAuth('mock-jwt-token', newUser)
-      return { data: { user: newUser, token: 'mock-jwt-token' } }
+      this.users = [...this.users.filter((account) => account.email !== data.email), newUser]
+      this.saveUsers()
+      const safeUser = { ...newUser }
+      delete safeUser.password
+      this.setAuth('mock-jwt-token', safeUser)
+      return { data: { user: safeUser, token: 'mock-jwt-token' } }
     }
 
     if (url === '/auth/logout' && method === 'POST') {
