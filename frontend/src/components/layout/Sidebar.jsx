@@ -1,22 +1,17 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { 
-  LayoutDashboard, 
-  Search, 
-  FileText, 
-  Sparkles, 
-  Mail, 
-  KanbanSquare, 
-  BarChart3, 
-  Mic, 
+import {
+  LayoutDashboard,
+  Search,
+  FileText,
+  Sparkles,
+  Mail,
+  KanbanSquare,
+  BarChart3,
+  Mic,
   Settings,
   Bot,
-  ClipboardList,
   Menu,
   X,
-  User,
-  LogOut,
-  Bell,
-  ChevronDown
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
@@ -36,7 +31,6 @@ const navigation = [
 ]
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
   const { user, logout } = useAuth()
